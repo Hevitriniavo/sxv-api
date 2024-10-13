@@ -17,4 +17,6 @@ public interface PaymentService {
     PaymentWithReceiptsDTO findPaymentWithReceipts(Long paymentId);
 
     StudentPaymentReceiptsDTO findStudentPaymentReceipts(UUID studentId);
+
+    PaymentDTO findPaymentById(Long id);
 }

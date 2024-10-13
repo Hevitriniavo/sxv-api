@@ -26,6 +26,12 @@ public class PaymentController {
         return paymentService.findAllPayments();
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PaymentDTO getPayment(@PathVariable Long id){
+        return paymentService.findPaymentById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public PaymentDTO savePayment(@RequestBody PaymentDTO toSave){

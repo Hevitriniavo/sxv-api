@@ -93,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentWithReceiptsDTO findPaymentWithReceipts(Long paymentId) {
-        log.info("Fetching payment with ID: {}", paymentId);
+        log.info("Fetching payments with ID: {}", paymentId);
         var payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new HttpNotFoundException("Payment not found with id: " + paymentId));
 
@@ -139,6 +139,14 @@ public class PaymentServiceImpl implements PaymentService {
          var paymentDTOs = findPaymentsWithReceipts(studentId);
 
         return createStudentPaymentReceiptsDTO(student, paymentDTOs);
+    }
+
+    @Override
+    public PaymentDTO findPaymentById(Long id) {
+        log.info("Fetching payment with ID: {}", id);
+        var payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new HttpNotFoundException("Payment not found with id: " + id));
+        return toPaymentDTO(payment);
     }
 
     private Student findStudentById(UUID studentId) {
