@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: school-management-api
+
+  datasource:
+    url: ${JDBC_POSTGRES_URL} #jdbc:postgresql://<hôte>:<port>/<nom_base_de_données> ex: jdbc:postgresql://localhost:5432/mabase
+    username: ${JDBC_POSTGRES_USERNAME} #username postgres par default postgres ex: postgres
+    password: ${JDBC_POSTGRES_PASSWORD} #password postgres ex: monmotdepasse
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
+
+server:
+  port: 8086
