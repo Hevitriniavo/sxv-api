@@ -8,10 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, UUID>, JpaSpecificationExecutor<Student> {
+public interface StudentRepository extends JpaRepository<Student, String>, JpaSpecificationExecutor<Student> {
     @Query("""
                 SELECT NEW com.fresh.coding.schoolmanagementapi.dto.StudentDTO(
                     s.id,

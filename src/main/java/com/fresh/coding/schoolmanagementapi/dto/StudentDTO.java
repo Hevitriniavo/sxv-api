@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 
 @Getter
@@ -16,7 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class StudentDTO implements Serializable {
-    private UUID id;
+    @NotNull(message = "Student ID cannot be null")
+    private String id;
 
     @NotBlank(message = "Name cannot be empty.")
     @Size(max = 250, message = "Name cannot exceed 250 characters.")

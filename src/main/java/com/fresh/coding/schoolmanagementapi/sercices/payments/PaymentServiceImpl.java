@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,11 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentDTO save(PaymentDTO toSave) {
         log.info("Saving payment for student with ID: {}", toSave.getStudentId());
-        var payment = toSave.getId() != null ?
-                paymentRepository.findById(toSave.getId())
-                        .orElse(new Payment())
-                : new Payment();
-
+        var payment = paymentRepository.findById(toSave.getId()).orElse(new Payment());
         if (toSave.getStudentId() != null) {
             log.debug("Looking for student with ID: {}", toSave.getStudentId());
             Student student = studentRepository.findById(toSave.getStudentId())
@@ -89,7 +84,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         log.info("Deleting payment with ID: {}", id);
         if (!paymentRepository.existsById(id)) {
             log.error("Payment not found with ID: {}", id);
@@ -100,7 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public StudentWithPaymentsDTO findStudentWithPayments(UUID studentId) {
+    public StudentWithPaymentsDTO findStudentWithPayments(String studentId) {
         log.info("Fetching payments for student with ID: {}", studentId);
         var student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new HttpNotFoundException("Student not found with id: " + studentId));
@@ -133,7 +128,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-        public PaymentDTO findPaymentById(Long id) {
+    public PaymentDTO findPaymentById(String id) {
         log.info("Fetching payment with ID: {}", id);
         var payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new HttpNotFoundException("Payment not found with id: " + id));

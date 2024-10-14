@@ -2,7 +2,10 @@ package com.fresh.coding.schoolmanagementapi.sercices.students;
 
 import com.fresh.coding.schoolmanagementapi.dto.searchs.StudentSearch;
 import com.fresh.coding.schoolmanagementapi.entities.Student;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 public class StudentSpecification {
@@ -14,6 +17,11 @@ public class StudentSpecification {
             if (search.getName() != null && !search.getName().isEmpty()) {
                 predicate = criteriaBuilder.and(predicate,
                         criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.getName().toLowerCase() + "%"));
+            }
+
+            if (search.getId() != null && !search.getId().isEmpty()) {
+                predicate = criteriaBuilder.and(predicate,
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("id")), "%" + search.getId().toLowerCase() + "%"));
             }
 
             if (search.getFirstName() != null && !search.getFirstName().isEmpty()) {

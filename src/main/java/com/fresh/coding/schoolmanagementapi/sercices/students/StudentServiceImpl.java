@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,15 +63,7 @@ class StudentServiceImpl implements StudentService {
     @Override
     public StudentDTO save(StudentDTO toSave) {
         log.info("Saving student with ID: {}", toSave.getId() != null ? toSave.getId() : "New student");
-
-        var student = toSave.getId() != null ?
-                studentRepository.findById(toSave.getId())
-                        .orElseThrow(() -> {
-                            log.error("Students not found with ID: {}", toSave.getId());
-                            return new HttpNotFoundException("Student not found with id: " + toSave.getId());
-                        })
-                : new Student();
-
+        var student = studentRepository.findById(toSave.getId()).orElse(new Student());
         BeanUtils.copyProperties(toSave, student);
 
         student = studentRepository.save(student);
@@ -82,7 +73,7 @@ class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(String id) {
         log.info("Deleting student with ID: {}", id);
         if (!studentRepository.existsById(id)) {
             log.error("Student not found with ID: {}", id);

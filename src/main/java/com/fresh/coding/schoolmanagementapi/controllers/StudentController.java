@@ -2,7 +2,6 @@ package com.fresh.coding.schoolmanagementapi.controllers;
 
 import com.fresh.coding.schoolmanagementapi.dto.StudentDTO;
 import com.fresh.coding.schoolmanagementapi.dto.pagination.Paginate;
-import com.fresh.coding.schoolmanagementapi.dto.searchs.PaymentSearch;
 import com.fresh.coding.schoolmanagementapi.dto.searchs.StudentSearch;
 import com.fresh.coding.schoolmanagementapi.sercices.students.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -44,7 +42,7 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id){
+    public void delete(@PathVariable String id) {
         studentService.delete(id);
     }
 }

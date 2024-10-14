@@ -1,24 +1,27 @@
 package com.fresh.coding.schoolmanagementapi.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentDTO implements Serializable {
-    private Long id;
+    @NotNull(message = "Payment ID cannot be null")
+    private String id;
 
     @NotNull(message = "Student ID cannot be null")
-    private UUID studentId;
+    private String studentId;
 
     @NotBlank(message = "Payment name cannot be blank")
     private String paymentName;

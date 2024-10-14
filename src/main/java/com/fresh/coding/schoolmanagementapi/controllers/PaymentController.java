@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -39,7 +38,7 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PaymentDTO getPayment(@PathVariable Long id){
+    public PaymentDTO getPayment(@PathVariable String id) {
         return paymentService.findPaymentById(id);
     }
 
@@ -52,13 +51,13 @@ public class PaymentController {
 
     @GetMapping("/student/{studentId}")
     @ResponseStatus(HttpStatus.OK)
-    public StudentWithPaymentsDTO getPaymentsByStudentId(@PathVariable UUID studentId) {
+    public StudentWithPaymentsDTO getPaymentsByStudentId(@PathVariable String studentId) {
         return paymentService.findStudentWithPayments(studentId);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable String id) {
         paymentService.delete(id);
     }
 }

@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,7 +22,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     private final StudentRepository studentRepository;
 
     @Override
-    public StudentPaymentDTO findStudentPaymentByStudentIdAndPaymentId(UUID studentId, Long paymentId) {
+    public StudentPaymentDTO findStudentPaymentByStudentIdAndPaymentId(String studentId, String paymentId) {
         log.info("Fetching payment for student ID: {} and payment ID: {}", studentId, paymentId);
 
         var student = getStudentById(studentId);
@@ -33,12 +31,12 @@ public class ReceiptServiceImpl implements ReceiptService {
         return mapToStudentPaymentDTO(student, payment);
     }
 
-    private Student getStudentById(UUID studentId) {
+    private Student getStudentById(String studentId) {
         return studentRepository.findById(studentId)
                 .orElseThrow(() -> new HttpNotFoundException("Student not found with id: " + studentId));
     }
 
-    private Payment getPaymentByIdAndStudent(Long paymentId, Student student) {
+    private Payment getPaymentByIdAndStudent(String paymentId, Student student) {
         return paymentRepository.findById(paymentId)
                 .filter(p -> p.getStudent().getId().equals(student.getId()))
                 .orElseThrow(() -> new HttpNotFoundException("Payment not found with id: " + paymentId + " for student: " + student.getId()));

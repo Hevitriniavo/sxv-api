@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentSearch {
+    private String id;
     private String name;
     private String firstName;
     private String className;

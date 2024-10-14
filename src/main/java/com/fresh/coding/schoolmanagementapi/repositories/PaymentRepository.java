@@ -8,19 +8,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpecificationExecutor<Payment> {
-    List<Payment> findAllByStudentId(UUID studentId);
+public interface PaymentRepository extends JpaRepository<Payment, String>, JpaSpecificationExecutor<Payment> {
+    List<Payment> findAllByStudentId(String studentId);
 
     @Query("""
                  SELECT
                     NEW
-                    com.fresh.coding.schoolmanagementapi.dto.TotalPaymentsByClassDTO(p.student.className, SUM(p.amount)) 
-                        FROM 
-                        Payment p 
-                  GROUP BY 
+                    com.fresh.coding.schoolmanagementapi.dto.TotalPaymentsByClassDTO(p.student.className, SUM(p.amount))
+                        FROM
+                        Payment p
+                  GROUP BY
                   p.student.className
             
             """)

@@ -31,6 +31,7 @@ public class SchoolManagementApiApplication {
 //            List<Student> students = IntStream.rangeClosed(1, 50)
 //                    .mapToObj(i -> Student.builder()
 //                            .name("StudentName" + i)
+//                            .id("STD" + i)
 //                            .firstName("FirstName" + i)
 //                            .className("Class" + (i % 5 + 1))
 //                            .address("Address" + i)
@@ -45,6 +46,7 @@ public class SchoolManagementApiApplication {
 //                        Student student = students.get(j % students.size());
 //                        return Payment.builder()
 //                                .student(student)
+//                                .id("PAYMENT" + 1)
 //                                .paymentName("PaymentName" + j)
 //                                .paymentDate(LocalDate.now().minusMonths(j % 5))
 //                                .price(100 * (j % 5 + 1))

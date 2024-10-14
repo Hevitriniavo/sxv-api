@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PaymentSearch {
     private String paymentName;
+    private String id;
     private LocalDate startDate;
     private LocalDate endDate;
     private Integer minPrice;

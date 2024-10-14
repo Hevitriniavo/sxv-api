@@ -12,7 +12,12 @@ public class PaymentSpecification {
 
             if (paymentSearch.getPaymentName() != null && !paymentSearch.getPaymentName().isEmpty()) {
                 predicate = criteriaBuilder.and(predicate,
-                        criteriaBuilder.like(root.get("paymentName"), "%" + paymentSearch.getPaymentName() + "%"));
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("paymentName")), "%" + paymentSearch.getPaymentName().toLowerCase() + "%"));
+            }
+
+            if (paymentSearch.getId() != null && !paymentSearch.getId().isEmpty()) {
+                predicate = criteriaBuilder.and(predicate,
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("id")), "%" + paymentSearch.getId().toLowerCase() + "%"));
             }
 
             if (paymentSearch.getStartDate() != null) {
@@ -39,6 +44,7 @@ public class PaymentSpecification {
                 predicate = criteriaBuilder.and(predicate,
                         criteriaBuilder.equal(root.get("month"), paymentSearch.getMonth()));
             }
+
 
             return predicate;
         };

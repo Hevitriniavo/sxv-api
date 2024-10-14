@@ -5,7 +5,6 @@ import com.fresh.coding.schoolmanagementapi.dto.pagination.Paginate;
 import com.fresh.coding.schoolmanagementapi.dto.searchs.StudentSearch;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface StudentService {
 
@@ -14,5 +13,5 @@ public interface StudentService {
 
     StudentDTO save(StudentDTO toSave);
 
-    void delete(UUID id);
+    void delete(String id);
 }
