@@ -18,12 +18,3 @@ CREATE TABLE payments (
     FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
 
-CREATE TABLE receipts (
-    id SERIAL PRIMARY KEY,
-    payment_id INT NOT NULL,
-    issue_date DATE NOT NULL,
-    receipt_number VARCHAR(50) NOT NULL,
-    description TEXT,
-    FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE CASCADE
-);
-

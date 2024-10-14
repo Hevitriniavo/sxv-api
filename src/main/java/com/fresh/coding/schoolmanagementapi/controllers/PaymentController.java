@@ -1,8 +1,6 @@
 package com.fresh.coding.schoolmanagementapi.controllers;
 
 import com.fresh.coding.schoolmanagementapi.dto.PaymentDTO;
-import com.fresh.coding.schoolmanagementapi.dto.PaymentWithReceiptsDTO;
-import com.fresh.coding.schoolmanagementapi.dto.StudentPaymentReceiptsDTO;
 import com.fresh.coding.schoolmanagementapi.dto.StudentWithPaymentsDTO;
 import com.fresh.coding.schoolmanagementapi.sercices.payments.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -45,20 +43,9 @@ public class PaymentController {
         return paymentService.findStudentWithPayments(studentId);
     }
 
-    @GetMapping("/{paymentId}/receipts")
-    public PaymentWithReceiptsDTO findPaymentWithReceipts(@PathVariable Long paymentId) {
-       return paymentService.findPaymentWithReceipts(paymentId);
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         paymentService.delete(id);
-    }
-
-
-    @GetMapping("/students/{studentId}/receipts")
-    public StudentPaymentReceiptsDTO findStudentPaymentReceipts(@PathVariable UUID studentId) {
-       return paymentService.findStudentPaymentReceipts(studentId);
     }
 }

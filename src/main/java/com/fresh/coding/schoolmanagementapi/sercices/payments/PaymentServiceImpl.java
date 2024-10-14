@@ -1,12 +1,11 @@
 package com.fresh.coding.schoolmanagementapi.sercices.payments;
 
-import com.fresh.coding.schoolmanagementapi.dto.*;
+import com.fresh.coding.schoolmanagementapi.dto.PaymentDTO;
+import com.fresh.coding.schoolmanagementapi.dto.StudentWithPaymentsDTO;
 import com.fresh.coding.schoolmanagementapi.entities.Payment;
-import com.fresh.coding.schoolmanagementapi.entities.Receipt;
 import com.fresh.coding.schoolmanagementapi.entities.Student;
 import com.fresh.coding.schoolmanagementapi.exceptions.HttpNotFoundException;
 import com.fresh.coding.schoolmanagementapi.repositories.PaymentRepository;
-import com.fresh.coding.schoolmanagementapi.repositories.ReceiptRepository;
 import com.fresh.coding.schoolmanagementapi.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
-    private final ReceiptRepository receiptRepository;
     private final PaymentRepository paymentRepository;
     private final StudentRepository studentRepository;
 
@@ -91,24 +89,6 @@ public class PaymentServiceImpl implements PaymentService {
         return studentWithPaymentsDTO;
     }
 
-    @Override
-    public PaymentWithReceiptsDTO findPaymentWithReceipts(Long paymentId) {
-        log.info("Fetching payments with ID: {}", paymentId);
-        var payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new HttpNotFoundException("Payment not found with id: " + paymentId));
-
-        var paymentDTO = new PaymentWithReceiptsDTO();
-        BeanUtils.copyProperties(payment, paymentDTO);
-
-        var receiptDTOs = receiptRepository.findAllByPaymentId(paymentId).stream()
-                .map(this::toReceiptDTO)
-                .collect(Collectors.toList());
-
-        paymentDTO.setReceipts(receiptDTOs);
-        log.info("Found {} receipts for payment with ID: {}", receiptDTOs.size(), paymentId);
-
-        return paymentDTO;
-    }
 
     private PaymentDTO toPaymentDTO(Payment payment) {
         log.debug("Converting payment entity to DTO for payment ID: {}", payment.getId());
@@ -122,24 +102,6 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentDTO;
     }
 
-    private ReceiptDTO toReceiptDTO(Receipt receipt) {
-        log.debug("Converting receipt entity to DTO for receipt ID: {}", receipt.getId());
-        ReceiptDTO receiptDTO = new ReceiptDTO();
-        BeanUtils.copyProperties(receipt, receiptDTO);
-        receiptDTO.setPaymentId(receipt.getPayment().getId());
-        return receiptDTO;
-    }
-
-
-    @Override
-    public StudentPaymentReceiptsDTO findStudentPaymentReceipts(UUID studentId) {
-        log.info("Fetching payment receipts for student with ID: {}", studentId);
-
-        var student = findStudentById(studentId);
-         var paymentDTOs = findPaymentsWithReceipts(studentId);
-
-        return createStudentPaymentReceiptsDTO(student, paymentDTOs);
-    }
 
     @Override
         public PaymentDTO findPaymentById(Long id) {
@@ -149,63 +111,5 @@ public class PaymentServiceImpl implements PaymentService {
         return toPaymentDTO(payment);
     }
 
-    private Student findStudentById(UUID studentId) {
-        return studentRepository.findById(studentId)
-                .orElseThrow(() -> {
-                    log.error("Students not found with ID: {}", studentId);
-                    return new HttpNotFoundException("Student not found with id: " + studentId);
-                });
-    }
-
-    private List<PaymentWithReceiptsDTO> findPaymentsWithReceipts(UUID studentId) {
-        var payments = paymentRepository.findAllByStudentId(studentId);
-        log.info("Found {} payments for student ID: {}", payments.size(), studentId);
-
-        return payments.stream()
-                .map(this::mapPaymentToDTO)
-                .collect(Collectors.toList());
-    }
-
-    private PaymentWithReceiptsDTO mapPaymentToDTO(Payment payment) {
-        log.debug("Mapping payment ID: {}", payment.getId());
-
-        var receipts = receiptRepository.findAllByPaymentId(payment.getId()).stream()
-                .map(this::mapReceiptToDTO)
-                .collect(Collectors.toList());
-
-        log.debug("Found {} receipts for payment ID: {}", receipts.size(), payment.getId());
-
-        return new PaymentWithReceiptsDTO(
-                payment.getId(),
-                payment.getPaymentName(),
-                payment.getPaymentDate(),
-                payment.getPrice(),
-                payment.getMonth(),
-                payment.getAmount(),
-                receipts
-        );
-    }
-
-    private ReceiptDTO mapReceiptToDTO(Receipt receipt) {
-        return new ReceiptDTO(
-                receipt.getId(),
-                receipt.getPayment().getId(),
-                receipt.getIssueDate(),
-                receipt.getReceiptNumber(),
-                receipt.getDescription()
-        );
-    }
-
-    private StudentPaymentReceiptsDTO createStudentPaymentReceiptsDTO(Student student, List<PaymentWithReceiptsDTO> paymentDTOs) {
-        return new StudentPaymentReceiptsDTO(
-                student.getId(),
-                student.getName(),
-                student.getFirstName(),
-                student.getClassName(),
-                student.getAddress(),
-                student.getGender(),
-                paymentDTOs
-        );
-    }
 
 }
