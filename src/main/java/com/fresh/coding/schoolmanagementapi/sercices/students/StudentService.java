@@ -1,15 +1,16 @@
 package com.fresh.coding.schoolmanagementapi.sercices.students;
 
 import com.fresh.coding.schoolmanagementapi.dto.StudentDTO;
-import lombok.NonNull;
+import com.fresh.coding.schoolmanagementapi.dto.pagination.Paginate;
+import com.fresh.coding.schoolmanagementapi.dto.searchs.StudentSearch;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface StudentService {
 
-    @NonNull
-    List<StudentDTO> findAllStudents();
+    Paginate<List<StudentDTO>> findAllStudents(StudentSearch studentSearch, int page, int size);
+    List<StudentDTO> findAllStudents(StudentSearch studentSearch);
 
     StudentDTO save(StudentDTO toSave);
 

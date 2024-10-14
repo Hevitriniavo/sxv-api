@@ -2,6 +2,9 @@ package com.fresh.coding.schoolmanagementapi.sercices.payments;
 
 import com.fresh.coding.schoolmanagementapi.dto.PaymentDTO;
 import com.fresh.coding.schoolmanagementapi.dto.StudentWithPaymentsDTO;
+import com.fresh.coding.schoolmanagementapi.dto.pagination.PageInfo;
+import com.fresh.coding.schoolmanagementapi.dto.pagination.Paginate;
+import com.fresh.coding.schoolmanagementapi.dto.searchs.PaymentSearch;
 import com.fresh.coding.schoolmanagementapi.entities.Payment;
 import com.fresh.coding.schoolmanagementapi.entities.Student;
 import com.fresh.coding.schoolmanagementapi.exceptions.HttpNotFoundException;
@@ -10,6 +13,7 @@ import com.fresh.coding.schoolmanagementapi.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,14 +28,39 @@ public class PaymentServiceImpl implements PaymentService {
     private final StudentRepository studentRepository;
 
     @Override
-    public List<PaymentDTO> findAllPayments() {
-        log.info("Fetching all payments...");
-        List<PaymentDTO> payments = paymentRepository.findAll()
+    public Paginate<List<PaymentDTO>> findAllPayments(PaymentSearch paymentSearch, int page, int size) {
+        log.info("Fetching all payments with search criteria paginate...");
+        var pageable = PageRequest.of(page - 1, size);
+        var spec = PaymentSpecification.filter(paymentSearch);
+        var paymentPage = paymentRepository.findAll(spec, pageable);
+
+        var payments = paymentPage.getContent()
                 .stream()
                 .map(this::toPaymentDTO)
                 .collect(Collectors.toList());
-        log.info("Found {} payments", payments.size());
-        return payments;
+
+        var pageInfo = new PageInfo(
+                paymentPage.hasNext(),
+                paymentPage.hasPrevious(),
+                paymentPage.getTotalPages(),
+                paymentPage.getNumber(),
+                (int) paymentPage.getTotalElements()
+        );
+
+        return new Paginate<>(payments, pageInfo);
+    }
+
+    @Override
+    public List<PaymentDTO> findAllPayments(PaymentSearch paymentSearch) {
+        log.info("Fetching all payments with search criteria...");
+        var spec = PaymentSpecification.filter(paymentSearch);
+        var payments = paymentRepository.findAll(spec);
+
+        return payments
+                .stream()
+                .map(this::toPaymentDTO)
+                .collect(Collectors.toList());
+
     }
 
     @Override

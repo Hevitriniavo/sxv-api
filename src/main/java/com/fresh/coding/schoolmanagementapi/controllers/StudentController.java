@@ -1,6 +1,9 @@
 package com.fresh.coding.schoolmanagementapi.controllers;
 
 import com.fresh.coding.schoolmanagementapi.dto.StudentDTO;
+import com.fresh.coding.schoolmanagementapi.dto.pagination.Paginate;
+import com.fresh.coding.schoolmanagementapi.dto.searchs.PaymentSearch;
+import com.fresh.coding.schoolmanagementapi.dto.searchs.StudentSearch;
 import com.fresh.coding.schoolmanagementapi.sercices.students.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +20,20 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    @GetMapping("/paginate")
+    @ResponseStatus(HttpStatus.OK)
+    public Paginate<List<StudentDTO>> getAllStudents(
+            @ModelAttribute StudentSearch studentSearch,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return studentService.findAllStudents(studentSearch, page, size);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<StudentDTO> getAllStudents(){
-        return studentService.findAllStudents();
+    public List<StudentDTO> getAllStudents( @ModelAttribute StudentSearch studentSearch){
+        return studentService.findAllStudents(studentSearch);
     }
 
     @PostMapping

@@ -2,6 +2,8 @@ package com.fresh.coding.schoolmanagementapi.controllers;
 
 import com.fresh.coding.schoolmanagementapi.dto.PaymentDTO;
 import com.fresh.coding.schoolmanagementapi.dto.StudentWithPaymentsDTO;
+import com.fresh.coding.schoolmanagementapi.dto.pagination.Paginate;
+import com.fresh.coding.schoolmanagementapi.dto.searchs.PaymentSearch;
 import com.fresh.coding.schoolmanagementapi.sercices.payments.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,20 @@ public class PaymentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PaymentDTO> getAllPayments(){
-        return paymentService.findAllPayments();
+    public List<PaymentDTO> getAllPayments(@ModelAttribute PaymentSearch paymentSearch) {
+        return paymentService.findAllPayments(paymentSearch);
     }
+
+    @GetMapping("/paginate")
+    @ResponseStatus(HttpStatus.OK)
+    public Paginate<List<PaymentDTO>> getAllPayments(
+            @ModelAttribute PaymentSearch paymentSearch,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return paymentService.findAllPayments(paymentSearch, page, size);
+    }
+
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

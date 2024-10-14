@@ -32,7 +32,7 @@ public class Payment {
     private Integer price;
 
     @Column( nullable = false)
-    private String month;
+    private Integer month;
 
     @Column( nullable = false)
     private Integer amount;
