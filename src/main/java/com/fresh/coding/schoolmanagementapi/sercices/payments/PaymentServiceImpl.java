@@ -142,7 +142,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentDTO findPaymentById(Long id) {
+        public PaymentDTO findPaymentById(Long id) {
         log.info("Fetching payment with ID: {}", id);
         var payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new HttpNotFoundException("Payment not found with id: " + id));
